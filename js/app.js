@@ -62,32 +62,27 @@ imagem: "img/logo.jpeg"
 // ===== FAVORITOS =====
 
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-
 function favoritar(id){
 
 const produto = produtos.find(p => p.id === id);
-
 const jaExiste = favoritos.find(p => p.id === id);
+const btn = document.getElementById("fav-btn-" + id);
 
 if(!jaExiste){
-
-favoritos.push(produto);
-
-localStorage.setItem("favoritos", JSON.stringify(favoritos));
-
-atualizarFavoritos();
-
-alert("Produto favoritado ❤️");
-
-}else{
-
-alert("Produto já está nos favoritos");
-
+  favoritos.push(produto);
+  localStorage.setItem("favoritos", JSON.stringify(favoritos));
+  atualizarFavoritos();
+  if(btn) btn.classList.replace("text-gray-500", "text-red-500");
+  document.getElementById("modal-fav-nome").textContent = produto.nome;
+  document.getElementById("modal-favorito").classList.remove("hidden");
+}else {
+  favoritos = favoritos.filter(p => p.id !== id);
+  localStorage.setItem("favoritos", JSON.stringify(favoritos));
+  atualizarFavoritos();
+  if(btn) btn.classList.replace("text-red-500", "text-gray-500");
 }
 
 }
-
-
 // ===== CONTADOR DE FAVORITOS =====
 
 function atualizarFavoritos(){
@@ -134,8 +129,8 @@ R$ ${produto.preco.toFixed(2)}
 <div class="flex gap-3">
 
 <!-- FAVORITOS -->
-<svg onclick="favoritar(${produto.id})"
-class="h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer transition"
+<svg id="fav-btn-${produto.id}" onclick="favoritar(${produto.id})"
+class="h-6 w-6 cursor-pointer transition ${favoritos.some(f => f.id === produto.id) ? 'text-red-500' : 'text-gray-500 hover:text-red-500'}"
 xmlns="http://www.w3.org/2000/svg"
 viewBox="0 0 24 24"
 fill="currentColor">
@@ -201,7 +196,20 @@ lista += `${p.nome} - R$ ${p.preco}\n`;
 alert(lista);
 
 }
-
+let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+function adicionarCarrinho(id){
+  const produto = produtos.find(p => p.id === id);
+  carrinho.push(produto);
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  document.getElementById("modal-cart-nome").textContent = produto.nome;
+  document.getElementById("modal-carrinho").classList.remove("hidden");
+}
+function fecharModalFavorito(){
+  document.getElementById("modal-favorito").classList.add("hidden");
+}
+function fecharModalCarrinho(){
+  document.getElementById("modal-carrinho").classList.add("hidden");
+}
 // ===== INICIAR LOJA =====
 
 document.addEventListener("DOMContentLoaded", () => {
