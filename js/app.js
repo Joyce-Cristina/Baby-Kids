@@ -86,19 +86,21 @@ if(!jaExiste){
 // ===== CONTADOR DE FAVORITOS =====
 
 function atualizarFavoritos(){
-
-const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-
-const contador = document.getElementById("contador-favoritos");
-
-if(contador){
-
-contador.innerText = favoritos.length;
-
+  const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+  const contador  = document.getElementById("contador-favoritos");
+  if(contador){
+    contador.innerText     = favoritos.length;
+    contador.style.display = favoritos.length > 0 ? "flex" : "none";
+  }
 }
-
+function atualizarCarrinho(){
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  const contador = document.getElementById("contador-carrinho");
+  if(contador){
+    contador.innerText = carrinho.length;
+    contador.style.display = carrinho.length > 0 ? "flex" : "none";
+  }
 }
-
 // ===== FUNÇÃO PARA MOSTRAR PRODUTOS =====
 
 function carregarProdutos(){
@@ -203,6 +205,8 @@ function adicionarCarrinho(id){
   localStorage.setItem("carrinho", JSON.stringify(carrinho));
   document.getElementById("modal-cart-nome").textContent = produto.nome;
   document.getElementById("modal-carrinho").classList.remove("hidden");
+  atualizarCarrinho(); // <- adicione essa linha
+
 }
 function fecharModalFavorito(){
   document.getElementById("modal-favorito").classList.add("hidden");
@@ -211,11 +215,8 @@ function fecharModalCarrinho(){
   document.getElementById("modal-carrinho").classList.add("hidden");
 }
 // ===== INICIAR LOJA =====
-
 document.addEventListener("DOMContentLoaded", () => {
-
-carregarProdutos();
-
-atualizarFavoritos();
-
+  carregarProdutos();
+  atualizarFavoritos();
+  atualizarCarrinho(); // <- adicione essa linha
 });
